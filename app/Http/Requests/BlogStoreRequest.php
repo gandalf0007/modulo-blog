@@ -31,8 +31,8 @@ class BlogStoreRequest extends FormRequest
         return [
            //que sea unico pero que ignore si probiene del mismo item es decir cuando se hace un update
            'titulo' => 'required|unique:blog_posts',
-           'descripcioncorta' => 'required',
            'descripcionlarga' => 'required',
+           'descripcioncorta' => 'required',
 
         ];
 

@@ -129,9 +129,22 @@ class BlogController extends BaseController
     }
 
 
-    public function store(BlogStoreRequest $request)
+
+    public function edit(Request $request,$id)
     {
       
+        $post = Blog_post::find($id);
+         $categorias = Blog_categoria::pluck('nombre','id');
+        $tags = Blog_post_tag::all();
+        return view("admin.blog.edit",compact('post','categorias','tags'));
+    }
+
+
+    public function store(BlogStoreRequest $request)
+    {
+        
+    
+        
         $post = new Blog_post;
         
         
@@ -148,18 +161,14 @@ class BlogController extends BaseController
             //esto es para q funcione en local 
             //image::make($imagen->getRealPath())->save( public_path('storage/'.$directory.'/'. $filename));
             image::make($imagen->getRealPath())->save('storage/'.$directory.'/'. $filename);
+            $ruta = 'storage/'.$directory.'/'. $filename;
         }elseif(empty($request->hasFile('imagen'))){
             //crea la carpeta
             Storage::makeDirectory($directory);
             $filename = "noticia.jpg";
-        }
-
-
-        if(empty($request->hasFile('imagen'))){
             $ruta = "storage/noticias/noticia.jpg"; 
-        }else{
-            $ruta = 'storage/'.$directory.'/'. $filename;
         }
+
 
     
         $post->user_id = Auth::user()->id;

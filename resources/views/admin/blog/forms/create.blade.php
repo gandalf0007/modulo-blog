@@ -47,6 +47,7 @@
    <div class="form-group col-xs-12 col-sm-12 col-md-12">
          <div class="input-group">
         {!!Form::textarea ('descripcioncorta',null,['class'=>'my-editor text','id'=>'lfm','placeholder'=>'ingrese la Descripcion'])!!}
+        
          </div>
          <h6 class="pull-right" id="count_message"></h6>
     </div>

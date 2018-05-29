@@ -18,9 +18,6 @@
                             <li class="breadcrumb-item active"><a href="#">Blog</a></li>
                         </ol>
                     </div>
-                    <div class="">
-                        <button class="right-side-toggle waves-effect waves-light btn-inverse btn btn-circle btn-sm pull-right m-l-10"><i class="ti-settings text-white"></i></button>
-                    </div>
                 </div>
 
 
@@ -43,41 +40,16 @@
 
 
         <h4 class="card-title">
-
+    
+    @can('crear-post')
       <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#nuevo-post"><i class="fa fa-plus fa-lg"> </i></button>
+    @endcan
       
            </h4>
 
            
 
 
-
-  <!--buscador-->
-{!!Form::open(['url'=>'usuario', 'method'=>'GET' , 'class'=>' form-group  navbar-form' , 'role'=>'Search'])!!}
-
-
-<div class="row ">
-
-<div class=" col-md-3 m-t-20">
-<div class="input-group">
-    <span class="input-group-addon" id="basic-addon3"><i class="fa fa-calendar"></i></span>
-      <input type="text" name="fecha_inicio" class="form-control mydatepicker" id="datepicker" aria-describedby="basic-addon3" placeholder="Fecha de Inicio">
-  </div>
-   </div>
-
-   <div class=" col-md-3 m-t-20">
-<div class="input-group">
-    <span class="input-group-addon" id="basic-addon3"><i class="fa fa-calendar"></i></span>
-      <input type="text" name="fecha_final" class="form-control mydatepicker" id="datepicker2"  placeholder="Fecha de Fin">
-  </div>
-   </div>
-
-   <div class=" col-md-3 m-t-20">
-      <button type="submit" class=" btn btn-success "> BUSCAR </button>
-   </div>
-  </div>
-{!!Form::close()!!}
- <!--endbuscador-->
     
 
                     <div class="table-responsive m-t-40">
@@ -118,8 +90,12 @@
 @include('admin.blog.modal.delete')
 @include('admin.blog.modal.status')
 
-<!-- bootstrap datepicker -->
-@section('datepicker')
+
+
+
+
+@section('mis-scripts')
+
  {!!Html::script('admin/adminpro/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js')!!} 
 
 <script>
@@ -128,12 +104,8 @@
    jQuery('.mydatepicker, #datepicker3').datepicker();
    jQuery('.mydatepicker, #datepicker4').datepicker();
 </script>
-@stop
 
 
-
-
-@section('mis-scripts')
 
 <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
@@ -205,7 +177,7 @@
            //OPERACIONES
             { data: null,  render: function ( data, type, row ) {
             
-                return "<button type='button' class='btn btn-primary  fa fa-edit' data-toggle='modal' data-target='#edit-"+data.id+"'></button>      <a class='btn btn-success  fa fa-globe' href='blog/"+data.slug+"'></a>     <button type='button' class='btn btn-danger  fa fa-trash-o' data-toggle='modal' data-target='#confirmDelete-"+data.id+"'></button> " 
+                return "@can('editar-post')<a  class='btn btn-primary  fa fa-edit' href='blog-edit/"+data.id+"'></a>@endcan      <a class='btn btn-success  fa fa-globe' href='blog/"+data.slug+"'></a>     @can('eliminar-post')<button type='button' class='btn btn-danger  fa fa-trash-o' data-toggle='modal' data-target='#confirmDelete-"+data.id+"'></button>@endcan " 
 
                 }
               },
@@ -215,8 +187,6 @@
         ],
     });
 }
-
-
 activartabla();
 </script>
 
@@ -224,46 +194,29 @@ activartabla();
 
 
 
-<!-- filemanager -->
-<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<!-- ckeditor + filemanager -->
+<script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
 <script>
-  var editor_config = {
-    path_absolute : "{{url('/')}}",
-    selector: "textarea.my-editor",
-    height: 500,
-    plugins: [
-      "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-      "searchreplace wordcount visualblocks visualchars code fullscreen",
-      "insertdatetime media nonbreaking save table contextmenu directionality",
-      "emoticons template paste textcolor colorpicker textpattern"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media",
-    relative_urls: false,
-    file_browser_callback : function(field_name, url, type, win) {
-      var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-      var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+  CKEDITOR.config.height = 400;
+  CKEDITOR.config.width = 1200;
 
-      var cmsURL = editor_config.path_absolute + '/laravel-filemanager?field_name=' + field_name;
-      if (type == 'image') {
-        cmsURL = cmsURL + "&type=Images";
-      } else {
-        cmsURL = cmsURL + "&type=Files";
-      }
+  CKEDITOR.replace('descripcioncorta',{
+    filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
+    filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
+    filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
+    filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token=',
+    customConfig: 'custom/descripcioncorta.js'
+});
 
-      tinyMCE.activeEditor.windowManager.open({
-        file : cmsURL,
-        title : 'Filemanager',
-        width : x * 0.8,
-        height : y * 0.8,
-        resizable : "yes",
-        close_previous : "no"
-      });
-    }
-  };
 
-  tinymce.init(editor_config);
+  CKEDITOR.replace('descripcionlarga',{
+    filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
+    filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
+    filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
+    filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token=',
+    customConfig: 'config.js'
+});
 </script>
-
 
 
 
@@ -313,7 +266,6 @@ activartabla();
     </script>
 
 @stop
-
 
 
 @endsection

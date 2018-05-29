@@ -5,8 +5,6 @@
 @include('alerts.success')
 @include('flash::message')
 
-
-
            <div class="row page-titles">
                     <div class="col-md-5 align-self-center">
                         <h3 class="text-themecolor"><i class="mdi mdi-wordpress"></i>
@@ -18,11 +16,6 @@
                           <li class="breadcrumb-item active"><a href="{!! URL::to('/blog-panel') !!}">Blog</a></li>
                           <li class="breadcrumb-item active"><a href="{!! URL::to('/blog-categorias') !!}">Categorias</a></li>
                         </ol>
-                    </div>
-                    <div class="">
-                        <button class="right-side-toggle waves-effect waves-light btn-inverse btn btn-circle btn-sm pull-right m-l-10"><i class="ti-settings text-white"></i></button>
-
-
                     </div>
                 </div>
 
@@ -46,8 +39,9 @@
 
 
         <h4 class="card-title">
-
+      @can('crear-post')
       <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#nuevo-categoria"><i class="fa fa-plus fa-lg"> </i></button>
+      @endcan
       
            </h4>
 
@@ -55,7 +49,7 @@
 
 
 
-  <!--buscador-->
+  <!--buscador
 {!!Form::open(['url'=>'usuario', 'method'=>'GET' , 'class'=>' form-group  navbar-form' , 'role'=>'Search'])!!}
 
 <div class="row ">
@@ -73,7 +67,7 @@
    </div>
   </div>
 {!!Form::close()!!}
- <!--endbuscador-->
+ endbuscador-->
 
 
       <h6 class="card-subtitle"></h6>
@@ -94,14 +88,16 @@
 
 
 <td>
+  @can('editar-post')
   <button type="button" class="btn btn-primary btn-lg fa fa-edit" data-toggle="modal" data-target="#edit-{{ $categoria->id }}"></button>
+  @endcan
 
 
 <!--esto es para que solo el administrador pueda eliminar-->
 <!--para el metodo eliminar necesito de un formulario para ejecutarlo-->
-@role('administrador')
+@can('eliminar-post')
  <button type="button" class="btn btn-danger btn-lg fa fa-trash-o" data-toggle="modal" data-target="#confirmDelete-{{ $categoria->id }}"></button>
-@endrole
+@endcan
 
 
 </td>
